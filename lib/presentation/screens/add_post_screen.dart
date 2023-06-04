@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:social_app/service/firebase_api.dart';
@@ -82,18 +83,26 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         left: 50, top: 4, bottom: 4, right: 50),
                     child: IconButton(
                       onPressed: () async {
-                        showDialog(
-                            barrierDismissible: true,
-                            context: context,
-                            builder: ((context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                )));
-                        await FirebaseApi().addPost(
-                            image: img,
-                            descriptionController: descriptionController);
+                        if (img == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('pls add photo'),
+                            ),
+                          );
+                        } else {
+                          showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: ((context) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  )));
 
-                        myNavigatorKey.currentState!
-                            .popUntil((route) => route.isFirst);
+                          await FirebaseApi().addPost(
+                              image: img,
+                              descriptionController: descriptionController);
+                          myNavigatorKey.currentState!
+                              .popUntil((route) => route.isFirst);
+                        }
                       },
                       icon: const Icon(
                         Icons.add,

@@ -32,6 +32,7 @@ class CommentsScreen extends StatelessWidget {
               .collection('posts')
               .doc(id)
               .collection('comments')
+              .orderBy('time', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
             return snapshot.hasData
